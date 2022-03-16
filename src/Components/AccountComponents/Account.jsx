@@ -5,6 +5,8 @@ import InstrumentList from './InstrumentList';
 
 function Account(props) {
 
+    const internationalNumberFormat = new Intl.NumberFormat('en-IN')
+
     const [instrumentData, setInstrumentData] = useState([]);
 
     const [showInstrumentForm, setShowInstrumentForm] = useState(false);
@@ -33,15 +35,30 @@ function Account(props) {
 
         let obj = { nickName: tempnickName, type: tempType, rate: tempRate, tenure: tempTenure, amount: tempAmount }
 
+        const found = instrumentData.findIndex((instrument) => {
+            return instrument.nickName === tempnickName;
+        })
+
         instrumentData.push(obj);
 
-        // let filteredInstrumentData = instrumentData.filter((v, i, a) => a.findIndex(t => (t.id === v.id)) == i);
+        let filteredInstrumentData = instrumentData.filter((v, i, a) => a.findIndex(t => (t.id === v.id)) == i);
 
-        // setInstrumentData(filteredInstrumentData);
+
+        setInstrumentData(filteredInstrumentData);
+
+        props.instrumentArrayUpdation(props.nickName, obj);
+
+        console.log(instrumentData);
+
 
         // console.log(accountData);
 
-        accountWealthUpdation(obj.amount);
+        console.log(found);
+
+        if (found == -1) {
+            accountWealthUpdation(obj.amount);
+        }
+
 
         event.target.reset();
 
@@ -69,21 +86,21 @@ function Account(props) {
     }
 
     return (
-        <div class="relative bg-fuchsia-300 w-full h-full my-4 p-4 shadow border-4 border-purple-600">
+        <div className="relative bg-fuchsia-300 w-full h-full my-4 p-4 shadow border-4 border-purple-600">
             <div>
                 <div className="flex justify-end gap-2 m-1">
                     <button onClick={renderInstrumentForm}
-                        class="bg-blue-500 text-white font-bold py-2 px-4 rounded opacity-50 hover:cursor">
+                        className="bg-blue-500 text-white font-bold py-2 px-4 rounded opacity-50 hover:cursor">
                         +
                     </button>
                     <button onClick={deleteAccount}
-                        class="bg-blue-500 text-white font-bold py-2 px-4 rounded opacity-50 hover:cursor">
+                        className="bg-blue-500 text-white font-bold py-2 px-4 rounded opacity-50 hover:cursor">
                         X
                     </button>
                 </div>
                 <div className="flex justify-between">
                     <h1 className="text-xl"><strong>{props.nickName}</strong></h1>
-                    <h1 className="text-xl"><strong>₹{accountBalance / 1}</strong></h1>
+                    <h1 className="text-xl"><strong>₹{internationalNumberFormat.format(accountBalance / 1)}</strong></h1>
                 </div>
                 <h2>{props.bankName} | {props.accountNumber}</h2>
             </div>
@@ -92,32 +109,61 @@ function Account(props) {
                     <form className="w-full p-2 border border-yellow-300" onSubmit={addInstrument}>
                         <div className="flex justify-end">
                             <button onClick={renderInstrumentForm}
-                                class="bg-blue-500 text-white font-bold py-2 px-4 rounded opacity-50 hover:cursor">
+                                className="bg-blue-500 text-white font-bold py-2 px-4 rounded opacity-50 hover:cursor">
                                 X
                             </button>
                         </div>
-                        <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-                            for="nickName">nickName :</label>
-                        <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-green-500 hover:border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-                            type="text" name="nickName" required />
-                        <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-                            for="type">Type :</label>
-                        <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-green-500 hover:border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-                            type="text" name="type" required />
-                        <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-                            for="rate">Rate :</label>
-                        <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-green-500 hover:border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-                            type="number" name="rate" required />
-                        <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-                            for="tenure">Tenure :</label>
-                        <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-green-500 hover:border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-                            type="text" name="tenure" required />
-                        <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-                            for="amount">Amount :</label>
-                        <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-green-500 hover:border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-                            type="text" name="amount" required />
+                        <div className="flex flex-row justify-around flex-wrap gap-8">
+
+                            <div>
+                                <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                                    for="nickName">nickName :</label>
+                                <input className="appearance-none block w-full bg-gray-200 text-gray-700 border 
+                                    border-green-500 hover:border-red-500 rounded py-3 px-4 mb-3 leading-tight 
+                                    focus:outline-none focus:bg-white"
+                                    type="text" name="nickName" required />
+                            </div>
+                            <div>
+                                <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                                    for="type">Type :</label>
+                                <select className="appearance-none block w-full bg-gray-200 text-gray-700 border
+                                     border-green-500 hover:border-red-500 rounded py-3 px-4 mb-3 leading-tight 
+                                     focus:outline-none focus:bg-white" name="type" id="type">
+                                    <option value="Fixed Deposit">Fixed Deposit</option>
+                                    <option value="Recurring Deposit">Recurring Deposit</option>
+                                    <option value="PPF">PPF</option>
+                                    <option value="NPS">NPS</option>
+                                    <option value="Non Invested">Non Invested</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                                    for="rate">Rate :</label>
+                                <input className="appearance-none block w-full bg-gray-200 text-gray-700 border
+                                    border-green-500 hover:border-red-500 rounded py-3 px-4 mb-3 leading-tight 
+                                    focus:outline-none focus:bg-white"
+                                    type="number" name="rate" required />
+                            </div>
+                            <div>
+                                <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                                    for="tenure">Tenure :</label>
+                                <input className="appearance-none block w-full bg-gray-200 text-gray-700 border 
+                                    border-green-500 hover:border-red-500 rounded py-3 px-4 mb-3 leading-tight 
+                                    focus:outline-none focus:bg-white"
+                                    type="text" name="tenure" required />
+                            </div>
+                            <div>
+                                <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                                    for="amount">Amount :</label>
+                                <input className="appearance-none block w-full bg-gray-200 text-gray-700 border 
+                                    border-green-500 hover:border-red-500 rounded py-3 px-4 mb-3 leading-tight 
+                                    focus:outline-none focus:bg-white"
+                                    type="text" name="amount" required />
+                            </div>
+                        </div>
                         <div className="flex justify-center">
-                            <button class="flex-shrink-0 bg-teal-500 hover:bg-teal-700 border-teal-500 hover:border-teal-700 text-sm border-4 text-white py-1 px-2 rounded"
+                            <button className="flex-shrink-0 bg-teal-500 hover:bg-teal-700 border-teal-500 
+                                hover:border-teal-700 text-sm border-4 text-white py-1 px-2 rounded"
                                 type="submit">Submit</button>
                         </div>
                     </form>

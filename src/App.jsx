@@ -8,15 +8,21 @@ import {
   Route
 } from "react-router-dom"
 import Dashboard from './Pages/Dashboard'
+import RealEstate from './Pages/RealEstate'
 
 function App() {
 
   // const [accountData, setAccountData] = useState([]);
   // const [goldData, setGoldData] = useState([]);
 
-  const [totalWealth, setTotalWealth] = useState(0);
-  const [goldNetWorth, setGoldlNetWorth] = useState(0);
-  // const [traditionalNetWorth, setTraditionalNetWorth] = useState(0);
+  const [temporalNetWorth, setTemporalNetWorth] = useState([]);
+
+  const [totalGold, setTotalGold] = useState(0);
+  const [totalTraditional, setTotalTraditional] = useState(0);
+
+  const initialTotalWealth = Number(totalGold) + Number(totalTraditional)
+
+  const [totalWealth, setTotalWealth] = useState(initialTotalWealth);
 
   const [traditionalPercentage, setTraditionalPercentage] = useState(0);
   const [goldPercentage, setGoldPercentage] = useState(0);
@@ -33,6 +39,13 @@ function App() {
 
   const totalWealthUpdation = (newEntry) => {
     setTotalWealth(Number(totalWealth) + Number(newEntry));
+
+    let temp = temporalNetWorth;
+    temp.push({ totalWealth: Date.now() })
+    setTemporalNetWorth(temp);
+
+    console.log(temporalNetWorth);
+
     // percentage();
     // console.log(traditionalNetWorth);
   }
@@ -47,13 +60,21 @@ function App() {
         <Sidebar />
         <div className="w-full justify-center items-center">
           <Routes>
-            <Route exact path="/" element={<Dashboard totalWealth={totalWealth} setTotalWealth={setTotalWealth} traditionalPercentage={traditionalPercentage} goldPercentage={goldPercentage} setTraditionalPercentage={setTraditionalPercentage} setGoldPercentage={setGoldPercentage} />} />
+            <Route exact path="/" element={<Dashboard totalWealth={totalWealth}
+              setTotalWealth={setTotalWealth}
+              traditionalPercentage={traditionalPercentage}
+              goldPercentage={goldPercentage}
+              setTraditionalPercentage={setTraditionalPercentage}
+              setGoldPercentage={setGoldPercentage} />} />
 
             <Route exact path="/traditional" element={<Traditional totalWealthUpdation={totalWealthUpdation} />} />
 
-            <Route exact path="/dashboard" element={<Dashboard totalWealth={totalWealth} goldNetWorth={goldNetWorth} />} />
+            <Route exact path="/dashboard" element={<Dashboard totalWealth={totalWealth} totalGold={totalGold} />} />
 
-            <Route exact path="/gold" element={<Gold totalWealthUpdation={totalWealthUpdation} goldNetWorth={goldNetWorth} setGoldlNetWorth={setGoldlNetWorth} />} />
+            <Route exact path="/gold" element={<Gold totalWealthUpdation={totalWealthUpdation} totalGold={totalGold}
+              setTotalGold={setTotalGold} />} />
+
+            <Route exact path="/RealEstate" element={<RealEstate />} />
           </Routes>
         </div>
       </div>

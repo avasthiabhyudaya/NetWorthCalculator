@@ -7,8 +7,13 @@ function GoldInstrumentList(props) {
             {
                 props.goldData.map((instrument, i) => {
                     return (
-                        <GoldInstrument key={`loc-${i}`} nickName={instrument.nickName} weight={instrument.weight} purity={instrument.purity}
-                            purchaseDate={instrument.purchaseDate} goldPrice={instrument.goldPrice} removeGoldInstrument={props.removeGoldInstrument} goldWealthUpdation={props.goldWealthUpdation}
+                        <GoldInstrument key={`loc-${i}`} nickName={instrument.nickName}
+                            weight={instrument.weight}
+                            purity={instrument.purity}
+                            purchaseDate={instrument.purchaseDate}
+                            goldPrice={instrument.goldPrice}
+                            removeGoldInstrument={props.removeGoldInstrument}
+                            goldWealthUpdation={props.goldWealthUpdation}
                         />
                     );
                 })

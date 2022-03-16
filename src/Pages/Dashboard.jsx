@@ -6,7 +6,7 @@ function Dashboard(props) {
 
     return (
         <div className="p-6">
-            <div class="flex flex-col justify-center items-center">
+            <div className="flex flex-col justify-center items-center">
                 <NetWorthCard AssetType={"Total"} totalAmount={props.totalWealth} />
             </div>
             {/* <div className="w-full flex flex-col border-4 border-cyan-900 bg-cyan-400 m-4 gap-4 p-4 font-black">
