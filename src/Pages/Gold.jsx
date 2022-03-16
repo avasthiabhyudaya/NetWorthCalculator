@@ -85,7 +85,7 @@ function Gold() {
 
                             <div>
                                 <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-                                    for=" instrumentNickName">Instrument NickName :</label>
+                                    forHtml=" instrumentNickName">Instrument NickName :</label>
                                 <input className="appearance-none block w-full bg-gray-200 text-gray-700 border 
                                     border-green-500 hover:border-red-500 rounded py-3 px-4 mb-3 leading-tight 
                                     focus:outline-none focus:bg-white"
@@ -93,7 +93,7 @@ function Gold() {
                             </div>
                             <div>
                                 <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-                                    for="weight">Weight (in grams) :</label>
+                                    forHtml="weight">Weight (in grams) :</label>
                                 <input className="appearance-none block w-full bg-gray-200 text-gray-700 border 
                                     border-green-500 hover:border-red-500 rounded py-3 px-4 mb-3 leading-tight 
                                     focus:outline-none focus:bg-white"
@@ -101,7 +101,7 @@ function Gold() {
                             </div>
                             <div>
                                 <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-                                    for="purity">Purity :</label>
+                                    forHtml="purity">Purity :</label>
                                 <select className="appearance-none block w-full bg-gray-200 text-gray-700 border 
                                     border-green-500 hover:border-red-500 rounded py-3 px-4 mb-3 leading-tight 
                                     focus:outline-none focus:bg-white" name="purity" id="purity">
@@ -115,7 +115,7 @@ function Gold() {
                             </div>
                             <div>
                                 <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-                                    for="purchaseDate">Date of Purchase :</label>
+                                    forHtml="purchaseDate">Date of Purchase :</label>
                                 <input className="appearance-none block w-full bg-gray-200 text-gray-700 border 
                                     border-green-500 hover:border-red-500 rounded py-3 px-4 mb-3 
                                     leading-tight focus:outline-none focus:bg-white"
@@ -123,7 +123,7 @@ function Gold() {
                             </div>
                             <div>
                                 <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-                                    for="GoldPrice">Gold Price (per gram) :</label>
+                                    forHtml="GoldPrice">Gold Price (per gram) :</label>
                                 <input className="appearance-none block w-full bg-gray-200 text-gray-700 border 
                                     border-green-500 hover:border-red-500 rounded py-3 px-4 mb-3 leading-tight 
                                     focus:outline-none focus:bg-white"
