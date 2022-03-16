@@ -4,117 +4,75 @@ import GoldInstrumentList from '../Components/GoldComponents/GoldInstrumentList'
 import NetWorthCard from '../Components/NetWorthCard';
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffect } from 'react';
+import { ADD_GOLD_DATA, UPDATE_GOLD_NW, DELETE_GOLD_DATA } from '../Redux/Reducers/GoldReducer';
 
 
-function Gold(props) {
+function Gold() {
 
-
-    const goldDataList = useSelector((state) => state.gold)
-    console.log(goldDataList);
-
+    const { goldDataList, totalNetWorth } = useSelector((state) => state.gold)
     const dispatch = useDispatch();
 
-
-    const initialSum = goldDataList.reduce(function (acc, obj) { return (acc + obj.weight * obj.goldPrice); }, 0);
-
     const [showGoldForm, setShowGoldForm] = useState(false);
-    const [goldData, setGoldData] = useState(goldDataList);
-    const [goldNetWorth, setGoldlNetWorth] = useState(initialSum);
-
-    useEffect(() => {
-        const data = localStorage.getItem('GoldData');
-        if (data) {
-            setGoldData(JSON.parse(data))
-        }
-    }, [])
-
-    useEffect(() => {
-        localStorage.setItem("GoldData", JSON.stringify(goldData));
-    })
-
-    useEffect(() => {
-        const netWorth = localStorage.getItem('GoldNetWorth');
-        if (netWorth) {
-            setGoldlNetWorth(JSON.parse(netWorth))
-        }
-    }, [])
-
-    useEffect(() => {
-        localStorage.setItem("GoldNetWorth", JSON.stringify(goldNetWorth));
-    })
-
-
-    const goldWealthUpdation = (newEntry) => {
-        setGoldlNetWorth(Number(goldNetWorth) + Number(newEntry));
-        props.totalWealthUpdation(newEntry);
-    }
-
-    const renderGoldForm = () => {
-        setShowGoldForm(!showGoldForm);
-    }
-
 
     const addGoldInstrument = (event) => {
         event.preventDefault();
-
-        let tempNickName = event.target[0].value;
-        let tempWeight = event.target[1].value;
-        let tempPurity = event.target[2].value;
-        let tempPurchaseDate = event.target[3].value;
-        let tempGoldPrice = event.target[4].value;
-
+        
         let obj = {
-            nickName: tempNickName,
-            weight: tempWeight,
-            purity: tempPurity,
-            purchaseDate: tempPurchaseDate,
-            goldPrice: tempGoldPrice
+            nickName: event.target[0].value,
+            weight: event.target[1].value,
+            purity: event.target[2].value,
+            purchaseDate: event.target[3].value,
+            goldPrice: event.target[4].value
         }
-
-        goldData.push(obj);
-
-        let filteredData = goldData.filter((v, i, a) => a.findIndex(t => (t.nickName === v.nickName)) == i);
-
-        setGoldData(filteredData);
 
         const checkNickName = goldDataList.find((instrument) => {
             return instrument.nickName === obj.nickName
         })
 
         if (!checkNickName) {
-            dispatch({ type: "ADD_GOLDDATA", payload: obj })
+            dispatch({ 
+                type: ADD_GOLD_DATA, 
+                payload: {
+                    goldDataList: [ ...goldDataList, obj ]
+                } 
+            });
+
+            dispatch({ 
+                type: UPDATE_GOLD_NW, 
+                payload: {
+                    totalNetWorth: totalNetWorth + parseInt(obj.goldPrice * obj.weight, 10)
+                } 
+            })
+
         }
-
-        // console.log(accountData);
-
-        goldWealthUpdation(Number(obj.goldPrice) * Number(obj.weight));
-
         event.target.reset();
-
-        renderGoldForm();
+        setShowGoldForm(prev => !prev)
     }
 
 
-    function removeGoldInstrument(nickName, instrumentValue) {
-        let filteredList = goldData.filter(goldInstrument => {
-            return goldInstrument.nickName !== nickName;
+    function removeGoldInstrument(nickNameToBeDeleted, instrumentValue) {
+        
+        dispatch({ 
+            type: DELETE_GOLD_DATA, 
+            payload: {
+                goldDataList: goldDataList.filter(currGoldItem => currGoldItem.nickName !== nickNameToBeDeleted)
+            } 
         });
-        setGoldData(filteredList);
-        goldWealthUpdation(-instrumentValue);
-        console.log(goldData);
 
-        dispatch({ type: "DELETE_CONTACT", payload: nickName })
-
+        dispatch({ 
+            type: UPDATE_GOLD_NW, 
+            payload: {
+                totalNetWorth: totalNetWorth - parseInt(instrumentValue, 10)
+            } 
+        })
 
     }
-
-
 
     return (
         <div className="p-6">
             <div className="flex flex-col justify-center items-center">
-                <NetWorthCard AssetType={"Gold"} totalAmount={goldNetWorth} />
-                <button onClick={renderGoldForm}
+                <NetWorthCard AssetType={"Gold"} totalAmount={totalNetWorth} />
+                <button onClick={() => setShowGoldForm(prev => !prev)}
                     className="bg-blue-500 text-white font-bold py-2 px-4 rounded opacity-50 hover:cursor">
                     {showGoldForm ? 'X' : '+'}
                 </button>
@@ -188,10 +146,9 @@ function Gold(props) {
                     </div>
                 </strong>
 
-                <GoldInstrumentList goldData={goldData} setGoldData={setGoldData}
+                <GoldInstrumentList 
+                    goldData={goldDataList}
                     removeGoldInstrument={removeGoldInstrument}
-                    goldNetWorth={props.goldNetWorth}
-                    goldWealthUpdation={goldWealthUpdation}
                 />
             </div>
 
