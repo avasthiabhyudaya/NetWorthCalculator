@@ -100,7 +100,7 @@ function Traditional(props) {
 
     }
 
-    const instrumentArrayUpdation = (accountNumber, obj) => {
+    const instrumentArrayAddition = (accountNumber, obj) => {
 
         // for (let i = 0; i < accountData.length; i++) {
         //     if (accountData[i].nickName === accountNickName) {
@@ -120,7 +120,7 @@ function Traditional(props) {
         }
 
         dispatch({
-            type: DELETE_TRADITIONAL_DATA,
+            type: UPDATE_TRADITIONAL_DATA,
             payload: {
                 traditionalDataList: tempTraditionalList
             }
@@ -132,6 +132,42 @@ function Traditional(props) {
                 traditionalNetWorth: traditionalNetWorth + parseInt(obj.amount, 10)
             }
         })
+    }
+
+    const instrumentArrayDeletion = (accountNumber, instrumentNickName) => {
+
+        let instrumentAmount = 0;
+
+        let tempTraditionalList = traditionalDataList.slice();
+
+
+        for (let i = 0; i < traditionalDataList.length; i++) {
+            if (traditionalDataList[i].accountNumber === accountNumber) {
+                tempTraditionalList[i].instruments = traditionalDataList[i].instruments.filter((obj) => {
+                    if (obj.nickName === instrumentNickName) {
+                        instrumentAmount = obj.amount;
+                    }
+                    return obj.nickName !== instrumentNickName
+                });
+                tempTraditionalList[i].accountSum -= parseInt(instrumentAmount, 10);
+            }
+        }
+
+
+        dispatch({
+            type: UPDATE_TRADITIONAL_DATA,
+            payload: {
+                traditionalDataList: tempTraditionalList
+            }
+        });
+
+        dispatch({
+            type: UPDATE_TRADITIONAL_NW,
+            payload: {
+                traditionalNetWorth: traditionalNetWorth - parseInt(instrumentAmount, 10)
+            }
+        })
+
     }
 
 
@@ -199,7 +235,9 @@ function Traditional(props) {
                     removeAccount={removeAccount}
                     traditionalNetWorth={traditionalNetWorth}
                     traditionalWealthUpdation={traditionalWealthUpdation}
-                    instrumentArrayUpdation={instrumentArrayUpdation} />
+                    instrumentArrayAddition={instrumentArrayAddition}
+                    instrumentArrayDeletion={instrumentArrayDeletion}
+                />
             </div>
 
 

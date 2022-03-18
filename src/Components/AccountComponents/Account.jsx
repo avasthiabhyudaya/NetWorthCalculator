@@ -11,18 +11,18 @@ function Account(props) {
 
     const [showInstrumentForm, setShowInstrumentForm] = useState(false);
 
-    const [accountBalance, setAccountBalance] = useState(0);
+    // const [accountBalance, setAccountBalance] = useState(0);
 
     // const renderInstrumentForm = () => {
     //     setShowInstrumentForm(!showInstrumentForm);
     // }
 
-    const accountWealthUpdation = (newEntry) => {
-        console.log(newEntry);
-        setAccountBalance(Number(accountBalance) + Number(newEntry));
-        console.log(accountBalance);
-        props.traditionalWealthUpdation(newEntry);
-    }
+    // const accountWealthUpdation = (newEntry) => {
+    //     console.log(newEntry);
+    //     setAccountBalance(Number(accountBalance) + Number(newEntry));
+    //     console.log(accountBalance);
+    //     props.traditionalWealthUpdation(newEntry);
+    // }
 
     const addInstrument = (event) => {
         event.preventDefault();
@@ -37,12 +37,12 @@ function Account(props) {
             amount: event.target.elements.amount.value
         }
 
-        const found = instrumentData.findIndex((instrument) => {
+        const found = props.instruments.findIndex((instrument) => {
             return instrument.nickName === tempnickName;
         })
 
         if (found == -1) {
-            props.instrumentArrayUpdation(props.accountNumber, obj);
+            props.instrumentArrayAddition(props.accountNumber, obj);
         }
 
 
@@ -53,16 +53,18 @@ function Account(props) {
 
     const removeInstrument = (nickName) => {
 
-        let instrumentAmount = 0;
+        // let instrumentAmount = 0;
 
-        let filteredInstrumentList = instrumentData.filter(instrument => {
-            if (instrument.nickName == nickName)
-                instrumentAmount = instrument.amount;
-            return instrument.nickName !== nickName;
-        });
-        setInstrumentData(filteredInstrumentList);
-        accountWealthUpdation(-instrumentAmount);
-        console.log(props.instrumentData);
+        props.instrumentArrayDeletion(props.accountNumber, nickName);
+
+        // let filteredInstrumentList = instrumentData.filter(instrument => {
+        //     if (instrument.nickName == nickName)
+        //         instrumentAmount = instrument.amount;
+        //     return instrument.nickName !== nickName;
+        // });
+        // setInstrumentData(filteredInstrumentList);
+        // accountWealthUpdation(-instrumentAmount);
+        // console.log(props.instrumentData);
 
     }
 
@@ -171,7 +173,7 @@ function Account(props) {
                 </div>
             )
             }
-            <InstrumentList instrumentData={instrumentData} removeInstrument={removeInstrument} />
+            <InstrumentList instrumentData={props.instruments} removeInstrument={removeInstrument} />
         </div >
     )
 }

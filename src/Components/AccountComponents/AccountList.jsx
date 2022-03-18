@@ -4,7 +4,8 @@ import Account from './Account';
 function AccountList({
     accountData = [],
     traditionalWealthUpdation,
-    instrumentArrayUpdation,
+    instrumentArrayAddition,
+    instrumentArrayDeletion,
     removeAccount
 }) {
 
@@ -15,7 +16,8 @@ function AccountList({
                     return (
                         <Account
                             key={account.nickName}
-                            instrumentArrayUpdation={instrumentArrayUpdation}
+                            instrumentArrayAddition={instrumentArrayAddition}
+                            instrumentArrayDeletion={instrumentArrayDeletion}
                             nickName={account.nickName}
                             bankName={account.bankName}
                             accountSum={account.accountSum}
