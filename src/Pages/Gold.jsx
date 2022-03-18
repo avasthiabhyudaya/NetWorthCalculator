@@ -3,7 +3,6 @@ import { useState } from 'react'
 import GoldInstrumentList from '../Components/GoldComponents/GoldInstrumentList';
 import NetWorthCard from '../Components/NetWorthCard';
 import { useSelector, useDispatch } from 'react-redux';
-import { useEffect } from 'react';
 import { ADD_GOLD_DATA, UPDATE_GOLD_NW, DELETE_GOLD_DATA } from '../Redux/Reducers/GoldReducer';
 
 
@@ -16,7 +15,7 @@ function Gold() {
 
     const addGoldInstrument = (event) => {
         event.preventDefault();
-        
+
         let obj = {
             nickName: event.target[0].value,
             weight: event.target[1].value,
@@ -30,18 +29,18 @@ function Gold() {
         })
 
         if (!checkNickName) {
-            dispatch({ 
-                type: ADD_GOLD_DATA, 
+            dispatch({
+                type: ADD_GOLD_DATA,
                 payload: {
-                    goldDataList: [ ...goldDataList, obj ]
-                } 
+                    goldDataList: [...goldDataList, obj]
+                }
             });
 
-            dispatch({ 
-                type: UPDATE_GOLD_NW, 
+            dispatch({
+                type: UPDATE_GOLD_NW,
                 payload: {
                     totalNetWorth: totalNetWorth + parseInt(obj.goldPrice * obj.weight, 10)
-                } 
+                }
             })
 
         }
@@ -51,19 +50,19 @@ function Gold() {
 
 
     function removeGoldInstrument(nickNameToBeDeleted, instrumentValue) {
-        
-        dispatch({ 
-            type: DELETE_GOLD_DATA, 
+
+        dispatch({
+            type: DELETE_GOLD_DATA,
             payload: {
                 goldDataList: goldDataList.filter(currGoldItem => currGoldItem.nickName !== nickNameToBeDeleted)
-            } 
+            }
         });
 
-        dispatch({ 
-            type: UPDATE_GOLD_NW, 
+        dispatch({
+            type: UPDATE_GOLD_NW,
             payload: {
                 totalNetWorth: totalNetWorth - parseInt(instrumentValue, 10)
-            } 
+            }
         })
 
     }
@@ -110,7 +109,14 @@ function Gold() {
                                         dark:text-gray-200 dark:hover:text-white" value="24K">24K</option>
                                     <option className="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 
                                         dark:hover:bg-gray-600 dark:text-gray-200 
-                                        dark:hover:text-white" value="22K">22K</option>
+                                        dark:hover:text-white" value="22K">
+                                        22K
+                                    </option>
+                                    <option className="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 
+                                        dark:hover:bg-gray-600 dark:text-gray-200 
+                                        dark:hover:text-white" value="18K">
+                                        18K
+                                    </option>
                                 </select>
                             </div>
                             <div>
@@ -146,7 +152,7 @@ function Gold() {
                     </div>
                 </strong>
 
-                <GoldInstrumentList 
+                <GoldInstrumentList
                     goldData={goldDataList}
                     removeGoldInstrument={removeGoldInstrument}
                 />

@@ -7,15 +7,15 @@ function Account(props) {
 
     const internationalNumberFormat = new Intl.NumberFormat('en-IN')
 
-    const [instrumentData, setInstrumentData] = useState([]);
+    const [instrumentData, setInstrumentData] = useState(props.instruments);
 
     const [showInstrumentForm, setShowInstrumentForm] = useState(false);
 
     const [accountBalance, setAccountBalance] = useState(0);
 
-    const renderInstrumentForm = () => {
-        setShowInstrumentForm(!showInstrumentForm);
-    }
+    // const renderInstrumentForm = () => {
+    //     setShowInstrumentForm(!showInstrumentForm);
+    // }
 
     const accountWealthUpdation = (newEntry) => {
         console.log(newEntry);
@@ -28,42 +28,27 @@ function Account(props) {
         event.preventDefault();
 
         let tempnickName = event.target.elements.nickName.value;
-        let tempType = event.target.elements.type.value;
-        let tempRate = event.target.elements.rate.value;
-        let tempTenure = event.target.elements.tenure.value;
-        let tempAmount = event.target.elements.amount.value;
 
-        let obj = { nickName: tempnickName, type: tempType, rate: tempRate, tenure: tempTenure, amount: tempAmount }
+        let obj = {
+            nickName: event.target.elements.nickName.value,
+            type: event.target.elements.type.value,
+            rate: event.target.elements.rate.value,
+            tenure: event.target.elements.tenure.value,
+            amount: event.target.elements.amount.value
+        }
 
         const found = instrumentData.findIndex((instrument) => {
             return instrument.nickName === tempnickName;
         })
 
-        instrumentData.push(obj);
-
-        let filteredInstrumentData = instrumentData.filter((v, i, a) => a.findIndex(t => (t.id === v.id)) == i);
-
-
-        setInstrumentData(filteredInstrumentData);
-
-        props.instrumentArrayUpdation(props.nickName, obj);
-
-        console.log(instrumentData);
-
-
-        // console.log(accountData);
-
-        console.log(found);
-
         if (found == -1) {
-            accountWealthUpdation(obj.amount);
+            props.instrumentArrayUpdation(props.accountNumber, obj);
         }
 
 
         event.target.reset();
 
-        renderInstrumentForm();
-
+        setShowInstrumentForm(prev => !prev)
     }
 
     const removeInstrument = (nickName) => {
@@ -82,14 +67,30 @@ function Account(props) {
     }
 
     const deleteAccount = () => {
-        props.removeAccount(props.accountNumber, accountBalance);
+        props.removeAccount(props.accountNumber, props.accountSum);
+
+        dispatch({
+            type: DELETE_TRADITIONAL_DATA,
+            payload: {
+                traditionalDataList: traditionalDataList.filter((currTraditionalItem) => {
+                    return currTraditionalItem.accountNumber !== props.accountNumber
+                })
+            }
+        });
+
+        dispatch({
+            type: UPDATE_TRADITIONAL_NW,
+            payload: {
+                traditionalNetWorth: traditionalNetWorth - parseInt(props.accountSum, 10)
+            }
+        })
     }
 
     return (
         <div className="relative bg-fuchsia-300 w-full h-full my-4 p-4 shadow border-4 border-purple-600">
             <div>
                 <div className="flex justify-end gap-2 m-1">
-                    <button onClick={renderInstrumentForm}
+                    <button onClick={() => setShowInstrumentForm(prev => !prev)}
                         className="bg-blue-500 text-white font-bold py-2 px-4 rounded opacity-50 hover:cursor">
                         +
                     </button>
@@ -100,7 +101,7 @@ function Account(props) {
                 </div>
                 <div className="flex justify-between">
                     <h1 className="text-xl"><strong>{props.nickName}</strong></h1>
-                    <h1 className="text-xl"><strong>₹{internationalNumberFormat.format(accountBalance / 1)}</strong></h1>
+                    <h1 className="text-xl"><strong>₹{internationalNumberFormat.format(props.accountSum)}</strong></h1>
                 </div>
                 <h2>{props.bankName} | {props.accountNumber}</h2>
             </div>
@@ -108,7 +109,7 @@ function Account(props) {
                 <div className="flex justify-center m-4">
                     <form className="w-full p-2 border border-yellow-300" onSubmit={addInstrument}>
                         <div className="flex justify-end">
-                            <button onClick={renderInstrumentForm}
+                            <button onClick={() => setShowInstrumentForm(prev => !prev)}
                                 className="bg-blue-500 text-white font-bold py-2 px-4 rounded opacity-50 hover:cursor">
                                 X
                             </button>
@@ -170,9 +171,7 @@ function Account(props) {
                 </div>
             )
             }
-            <InstrumentList instrumentData={instrumentData}
-                setInstrumentData={setInstrumentData}
-                accountWealthUpdation={props.accountWealthUpdation} removeInstrument={removeInstrument} />
+            <InstrumentList instrumentData={instrumentData} removeInstrument={removeInstrument} />
         </div >
     )
 }
