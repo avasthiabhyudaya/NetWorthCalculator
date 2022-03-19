@@ -7,7 +7,7 @@ function Account(props) {
 
     const internationalNumberFormat = new Intl.NumberFormat('en-IN')
 
-    const [instrumentData, setInstrumentData] = useState(props.instruments);
+    // const [instrumentData, setInstrumentData] = useState(props.instruments);
 
     const [showInstrumentForm, setShowInstrumentForm] = useState(false);
 
@@ -136,6 +136,7 @@ function Account(props) {
                                     <option value="Recurring Deposit">Recurring Deposit</option>
                                     <option value="PPF">PPF</option>
                                     <option value="NPS">NPS</option>
+                                    <option value="Loan">Loan</option>
                                     <option value="Non Invested">Non Invested</option>
                                 </select>
                             </div>

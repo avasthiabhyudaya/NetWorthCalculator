@@ -42,7 +42,7 @@ function Navbar() {
                             </li>
                             <li>
                                 <button className="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
-                                    SNAPSHOT
+                                    RESET
                                 </button>
                             </li>
                             <li>

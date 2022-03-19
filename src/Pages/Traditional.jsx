@@ -115,7 +115,12 @@ function Traditional(props) {
         for (let i = 0; i < tempTraditionalList.length; i++) {
             if (tempTraditionalList[i].accountNumber === accountNumber) {
                 tempTraditionalList[i].instruments.push(obj);
-                tempTraditionalList[i].accountSum += parseInt(obj.amount, 10);
+                if (obj.type !== 'Loan') {
+                    tempTraditionalList[i].accountSum += parseInt(obj.amount, 10);
+                }
+                if (obj.type === 'Loan') {
+                    tempTraditionalList[i].accountSum -= parseInt(obj.amount, 10);
+                }
             }
         }
 
@@ -126,10 +131,20 @@ function Traditional(props) {
             }
         });
 
+        let tempTraditionalNetWorth = traditionalNetWorth;
+
+        if (obj.type !== 'Loan') {
+            tempTraditionalNetWorth += parseInt(obj.amount, 10)
+        }
+
+        else if (obj.type === 'Loan') {
+            tempTraditionalNetWorth -= parseInt(obj.amount, 10)
+        }
+
         dispatch({
             type: UPDATE_TRADITIONAL_NW,
             payload: {
-                traditionalNetWorth: traditionalNetWorth + parseInt(obj.amount, 10)
+                traditionalNetWorth: tempTraditionalNetWorth
             }
         })
     }
@@ -137,6 +152,8 @@ function Traditional(props) {
     const instrumentArrayDeletion = (accountNumber, instrumentNickName) => {
 
         let instrumentAmount = 0;
+        let instrumentType;
+        let tempIValue;
 
         let tempTraditionalList = traditionalDataList.slice();
 
@@ -146,10 +163,17 @@ function Traditional(props) {
                 tempTraditionalList[i].instruments = traditionalDataList[i].instruments.filter((obj) => {
                     if (obj.nickName === instrumentNickName) {
                         instrumentAmount = obj.amount;
+                        instrumentType = obj.type;
+                        tempIValue = i;
                     }
                     return obj.nickName !== instrumentNickName
                 });
-                tempTraditionalList[i].accountSum -= parseInt(instrumentAmount, 10);
+                if (instrumentType !== 'Loan') {
+                    tempTraditionalList[i].accountSum -= parseInt(instrumentAmount, 10);
+                }
+                if (instrumentType === 'Loan') {
+                    tempTraditionalList[i].accountSum += parseInt(instrumentAmount, 10);
+                }
             }
         }
 
@@ -161,10 +185,21 @@ function Traditional(props) {
             }
         });
 
+        let tempTraditionalNetWorth = traditionalNetWorth;
+
+        if (instrumentType !== 'Loan') {
+            tempTraditionalNetWorth -= parseInt(instrumentAmount, 10)
+        }
+
+        else if (instrumentType === 'Loan') {
+            tempTraditionalNetWorth += parseInt(instrumentAmount, 10)
+        }
+
+
         dispatch({
             type: UPDATE_TRADITIONAL_NW,
             payload: {
-                traditionalNetWorth: traditionalNetWorth - parseInt(instrumentAmount, 10)
+                traditionalNetWorth: tempTraditionalNetWorth
             }
         })
 
