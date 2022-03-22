@@ -54,6 +54,11 @@ function Navbar() {
                     <div className="hidden w-full md:block md:w-auto" id="mobile-menu">
                         <ul className="flex flex-col mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium">
                             <li>
+                                <button className="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full" onClick={resetAll}>
+                                    RESET
+                                </button>
+                            </li>
+                            <li>
                                 <button id="download" className="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 
                                 px-4 rounded-full">
                                     DOWNLOAD
@@ -64,16 +69,11 @@ function Navbar() {
                                     UPLOAD
                                 </button>
                             </li>
-                            <li>
-                                <button className="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full" onClick={resetAll}>
-                                    RESET
-                                </button>
-                            </li>
-                            <li>
+                            {/* <li>
                                 <button className="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
                                     MODE
                                 </button>
-                            </li>
+                            </li> */}
                         </ul>
                     </div>
                 </div>
