@@ -3,31 +3,23 @@ import { useState } from 'react'
 import AccountList from '../Components/AccountComponents/AccountList';
 import NetWorthCard from '../Components/NetWorthCard';
 import { useSelector, useDispatch } from 'react-redux';
-import { ADD_TRADITIONAL_DATA, DELETE_TRADITIONAL_DATA, UPDATE_TRADITIONAL_DATA, UPDATE_TRADITIONAL_NW, REINIT_TRADITIONAL_PROPS } from '../Redux/Reducers/TraditionalReducer'
+import { ADD_TRADITIONAL_DATA, DELETE_TRADITIONAL_DATA, UPDATE_TRADITIONAL_DATA, UPDATE_TRADITIONAL_NW, UPDATE_TRADITIONAL_TIMESTAMP } from '../Redux/Reducers/TraditionalReducer'
 
 
-function Traditional(props) {
+function Traditional() {
+
 
     const internationalNumberFormat = new Intl.NumberFormat('en-IN')
 
-    const { traditionalDataList, traditionalNetWorth } = useSelector((state) => state.traditional)
+    const { traditionalDataList = [], traditionalNetWorth, traditionalTimeStamp } = useSelector((state) => state.traditional)
     const dispatch = useDispatch();
 
     const [showAccountForm, setShowAccountForm] = useState(false);
-    // const [accountData, setAccountData] = useState([]);
-    // const [traditionalNetWorth, setTraditionalNetWorth] = useState(0);
 
-
-
-
-    // const renderAccountForm = () => {
-    //     setShowAccountForm(!showAccountForm);
-    // }
 
     const traditionalWealthUpdation = (newEntry) => {
         setTraditionalNetWorth(parseInt(traditionalNetWorth, 10) + parseInt(newEntry, 10));
         props.totalWealthUpdation(newEntry);
-        // console.log(traditionalNetWorth);
     }
 
 
@@ -42,15 +34,10 @@ function Traditional(props) {
             accountSum: 0
         }
 
-        // accountData.push(obj);
-
-        // let filteredData = accountData.filter((v, i, a) => a.findIndex(t => (t.accountNumber === v.accountNumber)) == i);
-
         const checkAccountNumber = traditionalDataList.find((instrument) => {
             return instrument.accountNumber === obj.accountNumber
         })
 
-        // setAccountData(filteredData);
 
         if (!checkAccountNumber) {
             dispatch({
@@ -66,10 +53,14 @@ function Traditional(props) {
                     traditionalNetWorth: parseInt(traditionalNetWorth, 10) + parseInt(obj.accountSum, 10)
                 }
             })
-
+            dispatch({
+                type: UPDATE_TRADITIONAL_TIMESTAMP,
+                payload: {
+                    traditionalTimeStamp: new Date()
+                }
+            })
         }
 
-        // console.log(accountData);
 
         event.target.reset();
 
@@ -77,12 +68,6 @@ function Traditional(props) {
     }
 
     function removeAccount(accountNumber, accountBalance) {
-        // let filteredList = accountData.filter(account => {
-        //     return account.accountNumber !== accountNumber;
-        // });
-        // setAccountData(filteredList);
-        // traditionalWealthUpdation(-accountBalance);
-        // console.log(props.accountData);
 
         dispatch({
             type: DELETE_TRADITIONAL_DATA,
@@ -98,18 +83,16 @@ function Traditional(props) {
             }
         })
 
+        dispatch({
+            type: UPDATE_TRADITIONAL_TIMESTAMP,
+            payload: {
+                traditionalTimeStamp: new Date()
+            }
+        })
     }
 
     const instrumentArrayAddition = (accountNumber, obj) => {
 
-        // for (let i = 0; i < accountData.length; i++) {
-        //     if (accountData[i].nickName === accountNickName) {
-        //         accountData[i].instruments.push(obj);
-        //         console.log(accountData[i].instruments);
-        //     }
-        // }
-
-        //try splice and find flaw with it
         let tempTraditionalList = traditionalDataList.slice();
 
         for (let i = 0; i < tempTraditionalList.length; i++) {
@@ -145,6 +128,13 @@ function Traditional(props) {
             type: UPDATE_TRADITIONAL_NW,
             payload: {
                 traditionalNetWorth: tempTraditionalNetWorth
+            }
+        })
+
+        dispatch({
+            type: UPDATE_TRADITIONAL_TIMESTAMP,
+            payload: {
+                traditionalTimeStamp: new Date()
             }
         })
     }
@@ -203,6 +193,13 @@ function Traditional(props) {
             }
         })
 
+        dispatch({
+            type: UPDATE_TRADITIONAL_TIMESTAMP,
+            payload: {
+                traditionalTimeStamp: new Date()
+            }
+        })
+
     }
 
 
@@ -211,7 +208,7 @@ function Traditional(props) {
     return (
         <div className="p-6">
             <div className="flex flex-col justify-center items-center">
-                <NetWorthCard AssetType={"Traditional"} totalAmount={traditionalNetWorth} />
+                <NetWorthCard AssetType={"Traditional"} totalAmount={traditionalNetWorth} timestamp={new Date(traditionalTimeStamp).toLocaleString()} />
                 <button onClick={() => setShowAccountForm(prev => !prev)}
                     className="bg-blue-500 text-white font-bold py-2 px-4 rounded opacity-50 hover:cursor">
                     {showAccountForm ? 'X' : '+'}
@@ -220,12 +217,12 @@ function Traditional(props) {
 
             {showAccountForm && (
                 <div className="flex justify-center m-4">
-                    <form className="w-full border-2 border-yellow-300 p-4" onSubmit={addAccount}>
+                    <form className="w-full border-2 border-yellow-300 p-4" onSubmit={addAccount} autoComplete="off">
                         <div className="flex flex-row justify-evenly flex-wrap">
 
                             <div>
                                 <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-                                    for=" bankName">Account NickName :</label>
+                                    forhtml=" bankName">Account NickName :</label>
                                 <input className="appearance-none block w-full bg-gray-200 text-gray-700 border 
                                     border-green-500 hover:border-red-500 rounded py-3 px-4 mb-3 leading-tight 
                                     focus:outline-none focus:bg-white"
@@ -233,7 +230,7 @@ function Traditional(props) {
                             </div>
                             <div>
                                 <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-                                    for="bankName">Bank Name :</label>
+                                    forhtml="bankName">Bank Name :</label>
                                 <input className="appearance-none block w-full 
                                     bg-gray-200 text-gray-700 border border-green-500 hover:border-red-500 
                                     rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
@@ -241,7 +238,7 @@ function Traditional(props) {
                             </div>
                             <div>
                                 <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-                                    for="accNo">Bank Account Number :</label>
+                                    forhtml="accNo">Bank Account Number :</label>
                                 <input className="appearance-none block w-full bg-gray-200 text-gray-700 border 
                                     border-green-500 hover:border-red-500 rounded py-3 px-4 mb-3 leading-tight 
                                     focus:outline-none focus:bg-white"
@@ -266,7 +263,7 @@ function Traditional(props) {
                     </div>
                 </strong>
 
-                <AccountList accountData={traditionalDataList}
+                <AccountList traditionalDataList={traditionalDataList}
                     removeAccount={removeAccount}
                     traditionalNetWorth={traditionalNetWorth}
                     traditionalWealthUpdation={traditionalWealthUpdation}

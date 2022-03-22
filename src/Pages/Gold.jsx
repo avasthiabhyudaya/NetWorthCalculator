@@ -3,12 +3,12 @@ import { useState } from 'react'
 import GoldInstrumentList from '../Components/GoldComponents/GoldInstrumentList';
 import NetWorthCard from '../Components/NetWorthCard';
 import { useSelector, useDispatch } from 'react-redux';
-import { ADD_GOLD_DATA, UPDATE_GOLD_NW, DELETE_GOLD_DATA } from '../Redux/Reducers/GoldReducer';
+import { ADD_GOLD_DATA, UPDATE_GOLD_NW, DELETE_GOLD_DATA, UPDATE_GOLD_TIMESTAMP } from '../Redux/Reducers/GoldReducer';
 
 
 function Gold() {
 
-    const { goldDataList, totalNetWorth } = useSelector((state) => state.gold)
+    const { goldDataList, totalNetWorth, goldTimeStamp } = useSelector((state) => state.gold)
     const dispatch = useDispatch();
 
     const [showGoldForm, setShowGoldForm] = useState(false);
@@ -42,8 +42,14 @@ function Gold() {
                     totalNetWorth: totalNetWorth + parseInt(obj.goldPrice * obj.weight, 10)
                 }
             })
-
+            dispatch({
+                type: UPDATE_GOLD_TIMESTAMP,
+                payload: {
+                    goldTimeStamp: new Date()
+                }
+            })
         }
+
         event.target.reset();
         setShowGoldForm(prev => !prev)
     }
@@ -65,12 +71,19 @@ function Gold() {
             }
         })
 
+        dispatch({
+            type: UPDATE_GOLD_TIMESTAMP,
+            payload: {
+                goldTimeStamp: new Date()
+            }
+        })
+
     }
 
     return (
         <div className="p-6">
             <div className="flex flex-col justify-center items-center">
-                <NetWorthCard AssetType={"Gold"} totalAmount={totalNetWorth} />
+                <NetWorthCard AssetType={"Gold"} totalAmount={totalNetWorth} timestamp={new Date(goldTimeStamp).toLocaleString()} />
                 <button onClick={() => setShowGoldForm(prev => !prev)}
                     className="bg-blue-500 text-white font-bold py-2 px-4 rounded opacity-50 hover:cursor">
                     {showGoldForm ? 'X' : '+'}
@@ -79,7 +92,7 @@ function Gold() {
 
             {showGoldForm && (
                 <div className="flex justify-center m-4">
-                    <form className="w-full border-2 border-yellow-300 p-4" onSubmit={addGoldInstrument}>
+                    <form className="w-full border-2 border-yellow-300 p-4" onSubmit={addGoldInstrument} autoComplete="off">
                         <div className="flex flex-row justify-around flex-wrap">
 
                             <div>

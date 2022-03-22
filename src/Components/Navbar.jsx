@@ -1,8 +1,32 @@
 import React from 'react'
 
 import logo from './../Images/logo.png';
+import { REINIT_REAL_ESTATE_PROPS } from '../Redux/Reducers/RealEstateReducers';
+import { REINIT_GOLD_PROPS } from '../Redux/Reducers/GoldReducer';
+import { REINIT_TRADITIONAL_PROPS } from '../Redux/Reducers/TraditionalReducer';
+import { REINIT_DASHBOARD_DATA } from '../Redux/Reducers/DashboardReducers';
+import { useDispatch } from 'react-redux';
 
 function Navbar() {
+
+    const dispatch = useDispatch();
+
+    const resetAll = () => {
+        dispatch({
+            type: REINIT_REAL_ESTATE_PROPS
+        })
+        dispatch({
+            type: REINIT_GOLD_PROPS
+        })
+        dispatch({
+            type: REINIT_TRADITIONAL_PROPS
+        })
+        dispatch({
+            type: REINIT_DASHBOARD_DATA
+        })
+    }
+
+
     return (
         <div>
             <nav className="bg-white border-gray-200 px-2 sm:px-4 py-2.5 dark:bg-gray-800">
@@ -41,7 +65,7 @@ function Navbar() {
                                 </button>
                             </li>
                             <li>
-                                <button className="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
+                                <button className="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full" onClick={resetAll}>
                                     RESET
                                 </button>
                             </li>

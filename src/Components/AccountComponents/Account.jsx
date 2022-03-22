@@ -3,26 +3,20 @@ import { useState } from 'react'
 import InstrumentList from './InstrumentList';
 
 
-function Account(props) {
+function Account({
+    accountNumber,
+    accountSum,
+    nickName,
+    instruments,
+    bankName,
+    instrumentArrayAddition,
+    instrumentArrayDeletion,
+    removeAccount,
+}) {
 
     const internationalNumberFormat = new Intl.NumberFormat('en-IN')
 
-    // const [instrumentData, setInstrumentData] = useState(props.instruments);
-
     const [showInstrumentForm, setShowInstrumentForm] = useState(false);
-
-    // const [accountBalance, setAccountBalance] = useState(0);
-
-    // const renderInstrumentForm = () => {
-    //     setShowInstrumentForm(!showInstrumentForm);
-    // }
-
-    // const accountWealthUpdation = (newEntry) => {
-    //     console.log(newEntry);
-    //     setAccountBalance(Number(accountBalance) + Number(newEntry));
-    //     console.log(accountBalance);
-    //     props.traditionalWealthUpdation(newEntry);
-    // }
 
     const addInstrument = (event) => {
         event.preventDefault();
@@ -37,12 +31,12 @@ function Account(props) {
             amount: event.target.elements.amount.value
         }
 
-        const found = props.instruments.findIndex((instrument) => {
+        const found = instruments.findIndex((instrument) => {
             return instrument.nickName === tempnickName;
         })
 
         if (found == -1) {
-            props.instrumentArrayAddition(props.accountNumber, obj);
+            instrumentArrayAddition(accountNumber, obj);
         }
 
 
@@ -52,40 +46,13 @@ function Account(props) {
     }
 
     const removeInstrument = (nickName) => {
-
-        // let instrumentAmount = 0;
-
-        props.instrumentArrayDeletion(props.accountNumber, nickName);
-
-        // let filteredInstrumentList = instrumentData.filter(instrument => {
-        //     if (instrument.nickName == nickName)
-        //         instrumentAmount = instrument.amount;
-        //     return instrument.nickName !== nickName;
-        // });
-        // setInstrumentData(filteredInstrumentList);
-        // accountWealthUpdation(-instrumentAmount);
-        // console.log(props.instrumentData);
+        instrumentArrayDeletion(accountNumber, nickName);
 
     }
 
     const deleteAccount = () => {
-        props.removeAccount(props.accountNumber, props.accountSum);
+        removeAccount(accountNumber, accountSum);
 
-        dispatch({
-            type: DELETE_TRADITIONAL_DATA,
-            payload: {
-                traditionalDataList: traditionalDataList.filter((currTraditionalItem) => {
-                    return currTraditionalItem.accountNumber !== props.accountNumber
-                })
-            }
-        });
-
-        dispatch({
-            type: UPDATE_TRADITIONAL_NW,
-            payload: {
-                traditionalNetWorth: traditionalNetWorth - parseInt(props.accountSum, 10)
-            }
-        })
     }
 
     return (
@@ -102,14 +69,14 @@ function Account(props) {
                     </button>
                 </div>
                 <div className="flex justify-between">
-                    <h1 className="text-xl"><strong>{props.nickName}</strong></h1>
-                    <h1 className="text-xl"><strong>₹{internationalNumberFormat.format(props.accountSum)}</strong></h1>
+                    <h1 className="text-xl"><strong>{nickName}</strong></h1>
+                    <h1 className="text-xl"><strong>₹{internationalNumberFormat.format(accountSum)}</strong></h1>
                 </div>
-                <h2>{props.bankName} | {props.accountNumber}</h2>
+                <h2>{bankName} | {accountNumber}</h2>
             </div>
             {showInstrumentForm && (
                 <div className="flex justify-center m-4">
-                    <form className="w-full p-2 border border-yellow-300" onSubmit={addInstrument}>
+                    <form className="w-full p-2 border border-yellow-300" onSubmit={addInstrument} autoComplete="off">
                         <div className="flex justify-end">
                             <button onClick={() => setShowInstrumentForm(prev => !prev)}
                                 className="bg-blue-500 text-white font-bold py-2 px-4 rounded opacity-50 hover:cursor">
@@ -120,7 +87,7 @@ function Account(props) {
 
                             <div>
                                 <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-                                    for="nickName">nickName :</label>
+                                    forHtml="nickName">nickName :</label>
                                 <input className="appearance-none block w-full bg-gray-200 text-gray-700 border 
                                     border-green-500 hover:border-red-500 rounded py-3 px-4 mb-3 leading-tight 
                                     focus:outline-none focus:bg-white"
@@ -128,7 +95,7 @@ function Account(props) {
                             </div>
                             <div>
                                 <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-                                    for="type">Type :</label>
+                                    forHtml="type">Type :</label>
                                 <select className="appearance-none block w-full bg-gray-200 text-gray-700 border
                                      border-green-500 hover:border-red-500 rounded py-3 px-4 mb-3 leading-tight 
                                      focus:outline-none focus:bg-white" name="type" id="type">
@@ -142,15 +109,15 @@ function Account(props) {
                             </div>
                             <div>
                                 <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-                                    for="rate">Rate :</label>
+                                    forHtml="rate">Rate :</label>
                                 <input className="appearance-none block w-full bg-gray-200 text-gray-700 border
                                     border-green-500 hover:border-red-500 rounded py-3 px-4 mb-3 leading-tight 
                                     focus:outline-none focus:bg-white"
-                                    type="number" name="rate" required />
+                                    type="text" name="rate" required />
                             </div>
                             <div>
                                 <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-                                    for="tenure">Tenure :</label>
+                                    forHtml="tenure">Tenure :</label>
                                 <input className="appearance-none block w-full bg-gray-200 text-gray-700 border 
                                     border-green-500 hover:border-red-500 rounded py-3 px-4 mb-3 leading-tight 
                                     focus:outline-none focus:bg-white"
@@ -158,7 +125,7 @@ function Account(props) {
                             </div>
                             <div>
                                 <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-                                    for="amount">Amount :</label>
+                                    forHtml="amount">Amount :</label>
                                 <input className="appearance-none block w-full bg-gray-200 text-gray-700 border 
                                     border-green-500 hover:border-red-500 rounded py-3 px-4 mb-3 leading-tight 
                                     focus:outline-none focus:bg-white"
@@ -174,7 +141,10 @@ function Account(props) {
                 </div>
             )
             }
-            <InstrumentList instrumentData={props.instruments} removeInstrument={removeInstrument} />
+            <InstrumentList
+                instrumentData={instruments}
+                removeInstrument={removeInstrument}
+            />
         </div >
     )
 }
