@@ -1,21 +1,23 @@
 import React from "react";
 
-function GoldInstrument({
-    removeGoldInstrument,
-    weight,
-    goldPrice,
+function RealEstateInstrument({
     nickName,
+    type,
+    rentIncome,
     purchaseDate,
-    purity
+    area,
+    priceSqft,
+    removeREInstrument,
+    rentFlag
 }) {
 
     const deleteInstrument = () => {
-        removeGoldInstrument(nickName, instrumentPrice);
+        removeREInstrument(nickName, instrumentPrice);
     }
 
     const internationalNumberFormat = new Intl.NumberFormat('en-IN')
 
-    const instrumentPrice = Number(weight) * Number(goldPrice);
+    const instrumentPrice = Number(priceSqft) * Number(area);
 
     return (
         < div className="container mx-auto p-2 border-4 border-emerald-700 bg-green-400 m-4 ">
@@ -24,11 +26,11 @@ function GoldInstrument({
                     onClick={deleteInstrument}>X</button>
             </div >
             <div className="text-xl"><strong>{nickName}</strong></div>
-            <div className="instrumentType">Weight : <strong>{weight}g</strong> | Gold Price (/gm) : <strong>₹{goldPrice}</strong></div>
+            <div className="instrumentType">Type : <strong>{type}</strong></div>
             <div className="flex-row">
                 <div className="flex justify-between">
-                    <h3 className="instrumentTenure">Purity :
-                        <strong>{purity}</strong> | Date of Purchase : <strong>{purchaseDate}
+                    <h3 className="instrumentTenure">Rent Income :
+                        <strong>₹{rentIncome}</strong> | Date of Purchase : <strong>{purchaseDate}
                         </strong></h3>
                     <h3 className="instrumentAmount">
                         <strong>₹{internationalNumberFormat.format(instrumentPrice)}</strong>
@@ -39,4 +41,4 @@ function GoldInstrument({
     )
 }
 
-export default GoldInstrument
+export default RealEstateInstrument

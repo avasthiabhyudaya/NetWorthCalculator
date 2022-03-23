@@ -1,17 +1,30 @@
 import React, { useState } from 'react'
 import Account from './Account';
 
-function AccountList(props) {
-
+function AccountList({
+    traditionalDataList = [],
+    traditionalWealthUpdation,
+    instrumentArrayAddition,
+    instrumentArrayDeletion,
+    removeAccount
+}) {
     return (
         <div>
             {
-                props.accountData.map((account) => {
-                    return (
-                        <Account key={account.nickName} nickName={account.nickName} bankName={account.bankName} accountNumber={account.accountNumber} removeAccount={props.removeAccount} traditionalWealthUpdation={props.traditionalWealthUpdation}
-                        />
-                    );
-                })
+                traditionalDataList.map((account) =>
+                    <Account
+                        key={account.nickName}
+                        instrumentArrayAddition={instrumentArrayAddition}
+                        instrumentArrayDeletion={instrumentArrayDeletion}
+                        nickName={account.nickName}
+                        bankName={account.bankName}
+                        accountSum={account.accountSum}
+                        accountNumber={account.accountNumber}
+                        instruments={account.instruments}
+                        removeAccount={removeAccount}
+                        traditionalWealthUpdation={traditionalWealthUpdation}
+                    />
+                )
             }
         </div>
     )
