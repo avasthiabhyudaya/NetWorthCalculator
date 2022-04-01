@@ -23,6 +23,18 @@ function Sidebar() {
                     transition duration-200 hover:bg-gray-800 hover:text-white">
                     Real Estate
                 </Link>
+                <Link to="/mutualFunds" className="block py-2.5 px-4 rounded 
+                    transition duration-200 hover:bg-gray-800 hover:text-white">
+                    Stocks, Mutual Funds & ETFs
+                </Link>
+                <Link to="/bonds" className="block py-2.5 px-4 rounded 
+                    transition duration-200 hover:bg-gray-800 hover:text-white">
+                    Bonds
+                </Link>
+                <Link to="/crypto" className="block py-2.5 px-4 rounded 
+                    transition duration-200 hover:bg-gray-800 hover:text-white">
+                    Cryptocurrency
+                </Link>
             </div>
         </div>
     )

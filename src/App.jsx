@@ -4,6 +4,9 @@ import Traditional from './Pages/Traditional'
 import Gold from './Pages/Gold'
 import Dashboard from './Pages/Dashboard'
 import RealEstate from './Pages/RealEstate'
+import MutualFunds from './Pages/MutualFunds'
+import Bonds from './Pages/Bonds'
+import Crypto from './Pages/Crypto'
 import {
   Routes,
   Route
@@ -29,6 +32,13 @@ function App() {
             <Route exact path="/gold" element={<Gold />} />
 
             <Route exact path="/realEstate" element={<RealEstate />} />
+
+            <Route exact path="/mutualFunds" element={<MutualFunds />} />
+
+            <Route exact path="/bonds" element={<Bonds />} />
+
+            <Route exact path="/crypto" element={<Crypto />} />
+
           </Routes>
         </div>
       </div>

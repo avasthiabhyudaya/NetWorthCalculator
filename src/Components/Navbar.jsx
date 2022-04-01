@@ -1,15 +1,46 @@
 import React from 'react'
-
+import { store } from '../store';
 import logo from './../Images/logo.png';
 import { REINIT_REAL_ESTATE_PROPS } from '../Redux/Reducers/RealEstateReducers';
 import { REINIT_GOLD_PROPS } from '../Redux/Reducers/GoldReducer';
 import { REINIT_TRADITIONAL_PROPS } from '../Redux/Reducers/TraditionalReducer';
 import { REINIT_DASHBOARD_DATA } from '../Redux/Reducers/DashboardReducers';
+import { REINIT_MF_PROPS } from '../Redux/Reducers/MutualFundsReducers';
+import { REINIT_BOND_PROPS } from '../Redux/Reducers/BondReducers';
+import { REINIT_CRYPTO_PROPS } from '../Redux/Reducers/CryptoReducers';
 import { useDispatch } from 'react-redux';
+import { useState, useRef, useEffect } from 'react';
 
 function Navbar() {
 
     const dispatch = useDispatch();
+    const inputFile = useRef(null);
+
+    const [uploadedFile, setUploadedFile] = useState("");
+
+    const onButtonClick = () => {
+        inputFile.current.click();
+    };
+
+    const handleFileUpload = e => {
+        const { files } = e.target;
+        if (files && files.length) {
+            const filename = files[0].name;
+
+            var parts = filename.split(".");
+            const fileType = parts[parts.length - 1];
+            console.log("fileType", fileType); //ex: zip, rar, jpg, svg etc.
+
+            setUploadedFile(files[0]);
+        }
+    };
+
+    useEffect(() => {
+        console.log('File', uploadedFile);
+    }, [uploadedFile])
+
+
+
 
     const resetAll = () => {
         dispatch({
@@ -24,6 +55,28 @@ function Navbar() {
         dispatch({
             type: REINIT_DASHBOARD_DATA
         })
+        dispatch({
+            type: REINIT_MF_PROPS
+        })
+        dispatch({
+            type: REINIT_BOND_PROPS
+        })
+        dispatch({
+            type: REINIT_CRYPTO_PROPS
+        })
+    }
+
+    const downloadFile = async () => {
+        const fileName = prompt('Please enter a name for the file to be downloaded') || "file";
+        const json = JSON.stringify(store.getState());
+        const blob = new Blob([json], { type: 'application/json' });
+        const href = await URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = href;
+        link.download = fileName + ".json";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     }
 
 
@@ -60,14 +113,16 @@ function Navbar() {
                             </li>
                             <li>
                                 <button id="download" className="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 
-                                px-4 rounded-full">
+                                px-4 rounded-full" onClick={downloadFile}>
                                     DOWNLOAD
                                 </button>
                             </li>
                             <li>
-                                <button className="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
+                                <button className="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+                                    onClick={onButtonClick}>
                                     UPLOAD
                                 </button>
+                                <input type='file' id='file' onChange={handleFileUpload} ref={inputFile} style={{ display: 'none' }} />
                             </li>
                             {/* <li>
                                 <button className="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">

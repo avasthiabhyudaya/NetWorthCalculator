@@ -117,7 +117,7 @@ function Account({
                             </div>
                             <div>
                                 <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-                                    forHtml="tenure">Tenure :</label>
+                                    forHtml="tenure">Tenure (in years) :</label>
                                 <input className="appearance-none block w-full bg-gray-200 text-gray-700 border 
                                     border-green-500 hover:border-red-500 rounded py-3 px-4 mb-3 leading-tight 
                                     focus:outline-none focus:bg-white"
